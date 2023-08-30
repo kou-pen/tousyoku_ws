@@ -3,4 +3,14 @@
 			<div class="pt-3 pb-4">
                 これはfaceです
 			</div>
+			<div class="pt-3 pb-4">
+                <img src="{{ url_for('video_feed3') }}">
+			</div>
+			<form method="POST">
+				<div class="mb-3">
+					<label for="facename"  class="form-label">Face name</label>
+					<input type="text" class="form-control" name="facename" id="facename">
+				</div>
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</form>
 {% endblock %}

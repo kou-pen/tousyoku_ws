@@ -1,15 +1,38 @@
-# camera.py
-
 import cv2
+from base_camera import BaseCamera
+from base_camera2 import BaseCamera2
 
-class Camera(object):
-    def __init__(self,cam_num):
-        self.video = cv2.VideoCapture(cam_num)
 
-    def __del__(self):
-        self.video.release()
+class Camera(BaseCamera):
+    def __init__(self):
+        super().__init__()
 
-    def get_frame(self):
-        success, image = self.video.read()
-        ret, frame = cv2.imencode('.jpg', image)
-        return frame
+    @staticmethod
+    def frames():
+        camera = cv2.VideoCapture(0)
+        if not camera.isOpened():
+            raise RuntimeError('Could not start camera.')
+
+        while True:
+            # read current frame
+            _, img = camera.read()
+
+            # encode as a jpeg image and return it
+            yield cv2.imencode('.jpg', img)[1].tobytes()
+            
+class Camera2(BaseCamera2):
+    def __init__(self):
+        super().__init__()
+
+    @staticmethod
+    def frames():
+        camera = cv2.VideoCapture(4)
+        if not camera.isOpened():
+            raise RuntimeError('Could not start camera.')
+
+        while True:
+            # read current frame
+            _, img = camera.read()
+
+            # encode as a jpeg image and return it
+            yield cv2.imencode('.jpg', img)[1].tobytes()
