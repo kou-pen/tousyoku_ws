@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 from PIL import Image
 import io
+from face_detect import face_detect_truth
 
 
 app = Flask(__name__)
@@ -51,8 +52,12 @@ def cap(camera,name):
         with Image.open(num_byteio) as img:
             num_numpy = np.asarray(img)
         new_image = np.array(num_numpy)
-        
-        cv2.imwrite(new_name,new_image)
+        flag = face_detect_truth(new_image)
+        if not flag:
+            cv2.imwrite(new_name,new_image,[cv2.IMWRITE_JPEG_QUALITY, 100])
+            print("saved")
+        else:
+            print("Already known")
     else:
         print('frame is none')
 
