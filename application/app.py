@@ -52,8 +52,8 @@ def cap(camera,name):
         with Image.open(num_byteio) as img:
             num_numpy = np.asarray(img)
         new_image = np.array(num_numpy)
-        flag = face_detect_truth(new_image)
-        if not flag:
+        detect_flag = face_detect_truth(new_image)
+        if not detect_flag:
             cv2.imwrite(new_name,new_image,[cv2.IMWRITE_JPEG_QUALITY, 100])
             print("saved")
         else:
