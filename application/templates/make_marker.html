@@ -1,0 +1,18 @@
+{% extends "template.html" %}
+
+{% block content %}
+
+<form method='POST'>
+    <div class="mb-3">
+        <label for="number"  class="form-label">Number of markers</label>
+        <select class="form-select" aria-label="Number of markers" name="number">
+            <option value="0" selected >Number of markers you want to make</option>
+            <option value="24">24</option>
+            <option value="40">40</option>
+            <option value="54">54</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Make</button>
+    </div>
+</form>
+
+{% endblock %}

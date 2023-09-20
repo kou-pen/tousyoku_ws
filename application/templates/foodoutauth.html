@@ -1,0 +1,18 @@
+{% extends "template.html" %}
+{% block content %}
+			<div class="pt-3 pb-4">
+                <img src="{{ url_for('video_feed4') }}">
+			</div>
+			<form method='POST'>
+				<div class="mb-3">
+					<label for="username"  class="form-label">Number of markers</label>
+					<select class="form-select" aria-label="Number of markers" name="username">
+						<option value="0" selected >What's your name?</option>
+						{% for data in datas %}
+						<option value="{{data.user_name}}">{{data.user_name}}</option>
+						{% endfor %}
+					</select>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
+{% endblock %}

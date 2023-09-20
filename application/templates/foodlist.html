@@ -5,16 +5,16 @@
 					<tr>
 						<th scope="col" >#</th>
 						<th scope="col"></th>
-						<th scope="col">Name</th>
-						<th scope="col">Path</th>
+						<th scope="col">Aruco</th>
+						<th scope="col">User</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for data in datas %}
 					<tr>
 						<th scope="row">{{data.id}}<td>
+						<td>{{data.mark}}</td>
 						<td>{{data.user_name}}</td>
-						<td>{{data.file_name}}</td>
 					</tr>
 					{% endfor %}
 				</tbody>

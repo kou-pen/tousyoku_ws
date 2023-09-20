@@ -1,6 +1,6 @@
 import cv2
-from base_camera import BaseCamera
-from base_camera2 import BaseCamera2
+from modules.base_camera import BaseCamera
+from modules.base_camera2 import BaseCamera2
 
 
 class Camera(BaseCamera):

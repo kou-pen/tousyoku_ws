@@ -20,7 +20,18 @@ def master_encodings(images):
     encode_list = []
     for img in images:
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        encode = face_recognition.face_encodings(img)[0]
+        if face_recognition.face_encodings(img) == None:
+            encode = None
+            encode_list.append(encode)
+            return encode_list
+        try:
+            if face_recognition.face_encodings(img)[0].size != 0:
+                encode = face_recognition.face_encodings(img)[0]
+            else:
+                encode = None
+        except IndexError:
+            encode = None
+            
         encode_list.append(encode)
     return encode_list
 
@@ -32,10 +43,17 @@ def face_detect_truth(img):
     img_resize = cv2.cvtColor(img_resize, cv2.COLOR_BGR2RGB)
 
     matches = []
+    person = 0
     try:
         encode_frame = face_recognition.face_encodings(img_resize)[0]
         matches = face_recognition.compare_faces(encode_list_known, encode_frame)
+        face_distances = face_recognition.face_distance(encode_list_known, encode_frame)
+        best_match_index = np.argmin(face_distances)
+        if face_distances.size != 0:
+            person = classNames[best_match_index]
+        else:
+            person = None
     except IndexError:
         matches.append(False)
     
-    return True in matches
+    return True in matches, person

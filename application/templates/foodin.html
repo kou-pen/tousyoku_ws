@@ -1,0 +1,27 @@
+{% extends "template.html" %}
+
+{% block content %}
+
+<form method='POST'>
+    <div class="mb-3">
+        <label for="username"  class="form-label">Choose your name</label>
+        <select class="form-select" aria-label="user name" name="username" id="username">
+            <option value="0" selected >None</option>
+            {% for data in userdatas %}
+            <option value="{{data.user_name}}">{{data.user_name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="number"  class="form-label">Choose marker you want to use</label>
+        <select class="form-select" aria-label="user name" name="number" id="number">
+            <option value="0" selected >None</option>
+            {% for data in labeldatas %}
+            <option value={{data.mark}}>{{data.mark}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Use</button>
+</form>
+
+{% endblock %}

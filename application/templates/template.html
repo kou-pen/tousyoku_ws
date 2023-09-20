@@ -24,10 +24,10 @@
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="/data/">Data</a>
+                    <a class="nav-link" href="/foodlist/">Data</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Face</a>
+                    <a class="nav-link" href="/data/">Face</a>
                   </li>
                   <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -39,13 +39,24 @@
                     </ul>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#else">Else</a>
+                    <a class="nav-link" href="/else/">Else</a>
                   </li>
                 </ul>
               </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
           </nav>
         <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 py-4">
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ui class=flashes>
+              {% for message in messages %}
+              <div class="alert alert-info" role="alert">
+                {{ message }}
+              </div>
+              {% endfor %}
+            </ui>
+            {% endif %}
+          {% endwith %}
             {% block content %}
             {% endblock %}
         </main>

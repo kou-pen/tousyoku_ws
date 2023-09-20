@@ -1,0 +1,15 @@
+{% extends "template.html" %}
+{% block content %}
+			<form method='POST'>
+				<div class="mb-3">
+					<label for="mark"  class="form-label">Number of markers</label>
+					<select class="form-select" aria-label="Number of markers" name="mark">
+						<option value="0" selected >Select the number you want to retrieve</option>
+						{% for data in datas %}
+						<option value="{{data.mark}}">{{data.mark}}</option>
+						{% endfor %}
+					</select>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
+{% endblock %}
