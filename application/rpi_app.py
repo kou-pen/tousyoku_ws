@@ -25,7 +25,7 @@ wiringpi.pinMode(int(default['LED1']),1)
 def index():
     data, _ = mcp.ReadData(int(default['CE']),int(default['CH']),int(default['VREF']))
     print(data)
-    return {"status": data > int(default['TH'])}
+    return {"status": int(data) > int(default['TH'])}
 
 @app.post("/toggle")
 def toggle(data: bool_data):

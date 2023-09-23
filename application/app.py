@@ -128,7 +128,7 @@ app.secret_key = default['Secret_key']
 
 # Make instance
 db_tool = DataBaseTools(Base)
-api = ApiLed(default['GET_URL'],default['POST_URL'],default['LINE_TOKEN'])
+api = ApiLed(str(default['GET_URL']),str(default['POST_URL']),str(default['LINE_TOKEN']))
 
 #Routing
 @app.route('/')
