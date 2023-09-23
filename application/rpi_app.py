@@ -16,20 +16,20 @@ default = config['RPI']
 
 app = FastAPI()
 
-mcp.Setup(default['CE'],default['SPEED'])
+mcp.Setup(int(default['CE']),int(default['SPEED']))
 wiringpi.wiringPiSetupGpio()
 
-wiringpi.pinMode(default['LED1'],1)
+wiringpi.pinMode(int(default['LED1']),1)
 
 @app.get("/status")
 def index():
-    data, _ = mcp.ReadData(default['CE'],default['CH'],default['VREF'])
+    data, _ = mcp.ReadData(int(default['CE']),int(default['CH']),int(default['VREF']))
     print(data)
-    return {"status": data > default['TH']}
+    return {"status": data > int(default['TH'])}
 
 @app.post("/toggle")
 def toggle(data: bool_data):
-    wiringpi.digitalWrite(default['LED1'],data.status)
+    wiringpi.digitalWrite(int(default['LED1']),data.status)
     
 
 if __name__ == '__main__':
