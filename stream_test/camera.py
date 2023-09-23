@@ -15,7 +15,7 @@ class Camera(object):
     def get_frame(self):
         success, image = self.video.read()
         gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-        corners, ids, rejectedImgPoints = aruco.detectMarkers(gray, self.dict_aruco, parameters=self.parameters)
+        corners, ids, rejectedImgPoints = aruco.detect(gray, self.dict_aruco, parameters=self.parameters)
         
         frame_markers = aruco.drawDetectedMarkers(image.copy(), corners, ids)
         

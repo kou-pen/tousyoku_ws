@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 import face_recognition
 import os
-from datetime import datetime
 
 def search_path():
     path = 'pic'
@@ -22,17 +21,18 @@ def master_encodings(images):
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         if face_recognition.face_encodings(img) == None:
             encode = None
-            encode_list.append(encode)
-            return encode_list
-        try:
-            if face_recognition.face_encodings(img)[0].size != 0:
-                encode = face_recognition.face_encodings(img)[0]
-            else:
+        else:
+            try:
+                if face_recognition.face_encodings(img)[0].size != 0:
+                    encode = face_recognition.face_encodings(img)[0]
+                else:
+                    encode = None
+            except IndexError:
                 encode = None
-        except IndexError:
-            encode = None
             
         encode_list.append(encode)
+        print(len(encode_list))
+        print(encode_list)
     return encode_list
 
 def face_detect_truth(img):

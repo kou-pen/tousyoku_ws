@@ -9,7 +9,7 @@ class Camera(BaseCamera):
 
     @staticmethod
     def frames():
-        camera = cv2.VideoCapture(0)
+        camera = cv2.VideoCapture(2)
         if not camera.isOpened():
             raise RuntimeError('Could not start camera.')
 
@@ -26,7 +26,7 @@ class Camera2(BaseCamera2):
 
     @staticmethod
     def frames():
-        camera = cv2.VideoCapture(4)
+        camera = cv2.VideoCapture(0)
         if not camera.isOpened():
             raise RuntimeError('Could not start camera.')
 

@@ -2,8 +2,6 @@ import cv2
 from cv2 import aruco
 import numpy as np
 
-import os
-
 class ArucoGenerator():
     def  __init__(self):
         self.aruco = cv2.aruco
@@ -143,6 +141,7 @@ class ArucoGenerator():
         marker = self.gen_aruco(data)
         img = self.put_text_in_image(marker,data)
         cv2.imwrite(name,img)
+        
         
 if __name__ == '__main__':
     ar_gen = ArucoGenerator()

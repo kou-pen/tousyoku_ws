@@ -1,18 +1,25 @@
+# system module
 import io
+import configparser
 
+# Image Processing module
 import cv2
 import numpy as np
 from PIL import Image
 
+# Flask module
 from flask import Flask, render_template, Response, request, send_file, url_for, redirect, flash
 from flask import session as sess
 
+# User module
 from modules.camera import *
 from modules.face_detect import face_detect_truth
 from modules.sql_tool import *
 from modules.aruco_generator  import *
+from modules.api_led import ApiLed
 import modules.pdftools as pd
 
+# camera define
 def gen(camera):
     while True:
         frame = camera.get_frame()
@@ -25,7 +32,7 @@ def gen(camera):
 def cap(camera,name,save):
     frame = camera.get_frame()
     if frame is not None:
-        new_name = 'pic/'+name+'.jpg'
+        new_name = 'pic/'+name+'.jpeg'
         num_byteio = io.BytesIO(frame)
         with Image.open(num_byteio) as img:
             num_numpy = np.asarray(img)
@@ -39,6 +46,7 @@ def cap(camera,name,save):
             if os.path.isfile(new_name):
                 flash("file already exists")
                 return
+            new_image = cv2.cvtColor(new_image,cv2.COLOR_RGB2BGR)
             cv2.imwrite(new_name,new_image,[cv2.IMWRITE_JPEG_QUALITY, 100])
             ins_data = User(user_name = name,file_name = new_name)
             db_tool.insert(ins_data)
@@ -50,12 +58,78 @@ def cap(camera,name,save):
         flash('frame is none')
         
 
-db_tool = DataBaseTools(Base)
+# Aruco Define 
+# TODO:Do Classify
+def check_aruco(camera):
+    dict_aruco = aruco.getPredefinedDictionary(aruco.DICT_5X5_1000)
+    parameters = aruco.DetectorParameters()
+    detector = aruco.ArucoDetector(dict_aruco,parameters)
+    count = 0
+    while True:
+        api.toggle_led()
+        frame = camera.get_frame()
+        if frame is not None:
+            num_byteio = io.BytesIO(frame)
+            with Image.open(num_byteio) as img:
+                num_numpy = np.asarray(img)
+            new_image = np.array(num_numpy)
+            gray = cv2.cvtColor(new_image,cv2.COLOR_RGB2GRAY)
+            corners, ids, rejectedImgPoints = detector.detectMarkers(gray)
+            frame_markers = aruco.drawDetectedMarkers(new_image.copy(), corners, ids)
+            frame_markers = cv2.cvtColor(frame_markers,cv2.COLOR_RGB2BGR)
+            frame_markers = cv2.imencode('.jpg', frame_markers)[1].tobytes()
+            
+            aruco_list = np.ravel(ids).tolist()
+            truth_result = compare_aruco_db(UsingMarker,aruco_list)
+            if len(truth_result) == 0:
+                count = 0
+            else:
+                count += 1
+            
+            if count > 50:
+                not_found_handler(truth_result)
+                count = 0
+                break
+            
+            yield (b"--frame\r\n"
+                b"Content-Type: image/jpeg\r\n\r\n" + frame_markers+ b"\r\n")
+        else:
+            flash('frame is none')
+            
+def compare_aruco_db(table,aruco_list):
+    datas = db_tool.search_user(table,0)
+    if datas == None:
+        return True
+    if aruco_list == None:
+        return False
+    
+    result = []
+    for data in datas:
+        if data.mark not in aruco_list :
+            result.append(data.mark)
+    return result
 
+def not_found_handler(result):
+    text = ' '.join(map(str,result))
+    
+    text = text + ' lost!'
+    api.line_notify(text)
+    
+    
+# Configparser
+config = configparser.ConfigParser()
+config.read('config.ini')
+default = config['DEFAULT']
+        
+# Make Flask Ob
 app = Flask(__name__)
-app.secret_key = 'abcdefghijklmn'
+app.secret_key = default['Secret_key']
 
+# Make instance
+db_tool = DataBaseTools(Base)
+api = ApiLed(default['GET_URL'],default['POST_URL'],default['LINE_TOKEN'])
 
+#Routing
 @app.route('/')
 def index():
     return render_template('home.html')
@@ -90,6 +164,9 @@ def food_out_auth():
         return render_template("foodoutauth.html",datas=datas)
     elif request.method == 'POST':
         username = request.form['username']
+        if username == "0":
+            flash("please choose name")
+            return redirect(url_for("food_out_auth"))
         detect_flag ,names = cap(Camera(),username,0)
         if detect_flag==False or names!=username:
             flash("auth faild")
@@ -143,7 +220,7 @@ def video_feed1():
     
 @app.route("/cam2/")
 def video_feed2():
-    return Response(gen(Camera2()),
+    return Response(check_aruco(Camera2()),
             mimetype="multipart/x-mixed-replace; boundary=frame")
 
 @app.route("/cam3/")
@@ -192,11 +269,12 @@ def make_marker():
             db_tool.delete(data)
             
         pdf_path = pd.convert_to_pdf()
-        # pd.delete_all_png()
+
         flash("created")
         return send_file(pdf_path,as_attachment=True)
 
 
+# Main
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0',port=5000)

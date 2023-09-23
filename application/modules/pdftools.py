@@ -74,10 +74,12 @@ def delete_all_png():
 
 def datetime_ob ():
     dt_now = datetime.datetime.now()
+    month = dt_now.month
+    day = dt_now.day
     hour = dt_now.hour
     mins = dt_now.minute
     sec = dt_now.second
-    text = "{}_{}_{}".format(hour,mins,sec)
+    text = "{}_{}_{}_{}_{}".format(month,day,hour,mins,sec)
     return text
     
 if __name__ == '__main__':
