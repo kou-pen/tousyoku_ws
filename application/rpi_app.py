@@ -12,7 +12,7 @@ CE = 0
 SPEED = 1000000 # Hz
 VREF = 3.3 # V
 CH = 0
-TH = 600
+TH = 1000
 
 LED1 = 19
 
