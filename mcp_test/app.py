@@ -32,7 +32,7 @@ def index():
     print(data)
     return {"status": data > TH}
 
-@app.get("/toggle")
+@app.post("/toggle")
 def toggle(data: bool_data):
     wiringpi.digitalWrite(LED1,data.status)
     
