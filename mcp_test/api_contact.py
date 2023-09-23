@@ -7,6 +7,7 @@ def main():
     res = requests.get(GET_URL)
     get_json_data = res.json()
     now_status = get_json_data["status"]    
+    print(now_status)
     data = {
         'status': not now_status
     }
