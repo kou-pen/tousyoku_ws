@@ -1,4 +1,5 @@
 *.jpg
+*.jpeg
 *.png
 *.pdf
 __pycache__/
