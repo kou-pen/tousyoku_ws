@@ -18,7 +18,7 @@ class api_led():
         requests.post(self.POST_URL,json.dumps(data))
         
     def toggle_led(self):
-        self.post_led_status(self.get_now_status)
+        self.post_led_status(self.get_now_status())
 
 def main():
     GET_URL = 'http://192.168.0.10:8000/status'
