@@ -12,7 +12,7 @@ class bool_data(BaseModel):
 
 config = configparser.ConfigParser()
 config.read('config.ini')
-default = config['DEFAULT']
+default = config['RPI']
 
 app = FastAPI()
 
