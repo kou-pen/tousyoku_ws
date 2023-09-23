@@ -1,17 +1,21 @@
 import mcp3208 as mcp
 import time
+from fastapi import FastAPI
 
 CE = 0
 SPEED = 10000020 # Hz
 VREF = 3.3 # V
 CH = 0
 
+app = FastAPI()
+
 mcp.Setup(CE,SPEED)
 
-while True:
+@app.get("/status")
+def index():
     data, volt = mcp.ReadData(CE,CH,VREF)
-    print("%d, %d"%(data,volt))
-    time.sleep(0.01)
+    return {"status": data > 1000}
+
     
 
 
