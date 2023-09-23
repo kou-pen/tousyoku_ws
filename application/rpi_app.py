@@ -1,8 +1,6 @@
 import mcp3208 as mcp
 import wiringpi
 
-import configparser
-
 from fastapi import FastAPI
 import uvicorn
 from pydantic import BaseModel
@@ -10,26 +8,31 @@ from pydantic import BaseModel
 class bool_data(BaseModel):
     status: bool
 
-config = configparser.ConfigParser()
-config.read('config.ini')
-default = config['RPI']
+CE = 0
+SPEED = 1000000 # Hz
+VREF = 3.3 # V
+CH = 0
+TH = 600
+
+LED1 = 19
+
 
 app = FastAPI()
 
-mcp.Setup(int(default['CE']),int(default['SPEED']))
+mcp.Setup(CE,SPEED)
 wiringpi.wiringPiSetupGpio()
 
-wiringpi.pinMode(int(default['LED1']),1)
+wiringpi.pinMode(LED1,1)
 
 @app.get("/status")
 def index():
-    data, _ = mcp.ReadData(int(default['CE']),int(default['CH']),int(default['VREF']))
+    data, _ = mcp.ReadData(CE,CH,VREF)
     print(data)
-    return {"status": int(data) > int(default['TH'])}
+    return {"status": data > TH}
 
 @app.post("/toggle")
 def toggle(data: bool_data):
-    wiringpi.digitalWrite(int(default['LED1']),data.status)
+    wiringpi.digitalWrite(LED1,data.status)
     
 
 if __name__ == '__main__':
