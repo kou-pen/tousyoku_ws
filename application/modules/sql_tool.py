@@ -28,7 +28,7 @@ class UsingMarker(Base):
     
 class DataBaseTools(): ###もっと分業させる
     def __init__(self,Bases):
-        engine = create_engine("sqlite:///db/database",echo=True)
+        engine = create_engine("sqlite:///db/database")
         Bases.metadata.create_all(engine)    
 
         SessionClass = sessionmaker(engine)

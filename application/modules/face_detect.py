@@ -31,8 +31,6 @@ def master_encodings(images):
                 encode = None
             
         encode_list.append(encode)
-        print(len(encode_list))
-        print(encode_list)
     return encode_list
 
 def face_detect_truth(img):

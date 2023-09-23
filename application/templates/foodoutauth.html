@@ -5,14 +5,14 @@
 			</div>
 			<form method='POST'>
 				<div class="mb-3">
-					<label for="username"  class="form-label">Number of markers</label>
+					<label for="username"  class="form-label">あなたの名前</label>
 					<select class="form-select" aria-label="Number of markers" name="username">
-						<option value="0" selected >What's your name?</option>
+						<option value="0" selected >あなたの名前を選択</option>
 						{% for data in datas %}
 						<option value="{{data.user_name}}">{{data.user_name}}</option>
 						{% endfor %}
 					</select>
-					<button type="submit" class="btn btn-primary">Submit</button>
+					<button type="submit" class="btn btn-primary">認証</button>
 				</div>
 			</form>
 {% endblock %}

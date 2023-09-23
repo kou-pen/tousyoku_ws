@@ -1,6 +1,7 @@
 # system module
 import io
 import configparser
+import os
 
 # Image Processing module
 import cv2
@@ -27,7 +28,7 @@ def gen(camera):
             yield (b"--frame\r\n"
                 b"Content-Type: image/jpeg\r\n\r\n" + frame+ b"\r\n")
         else:
-            flash('frame is none')
+            print('frame is none')
         
 def cap(camera,name,save):
     frame = camera.get_frame()
@@ -44,18 +45,18 @@ def cap(camera,name,save):
         
         if not detect_flag:
             if os.path.isfile(new_name):
-                flash("file already exists")
+                flash("すでに同様のファイル名が存在します")
                 return
             new_image = cv2.cvtColor(new_image,cv2.COLOR_RGB2BGR)
             cv2.imwrite(new_name,new_image,[cv2.IMWRITE_JPEG_QUALITY, 100])
             ins_data = User(user_name = name,file_name = new_name)
             db_tool.insert(ins_data)
-            flash("saved as "+name)
+            flash(name + "として保存されました")
         else:
-            flash("Already known as " + names)
+            flash(names + "としてすでに登録済みです")
       
     else:
-        flash('frame is none')
+        print('frame is none')
         
 
 # Aruco Define 
@@ -94,7 +95,7 @@ def check_aruco(camera):
             yield (b"--frame\r\n"
                 b"Content-Type: image/jpeg\r\n\r\n" + frame_markers+ b"\r\n")
         else:
-            flash('frame is none')
+            print('frame is none')
             
 def compare_aruco_db(table,aruco_list):
     datas = db_tool.search_user(table,0)
@@ -112,7 +113,7 @@ def compare_aruco_db(table,aruco_list):
 def not_found_handler(result):
     text = ' '.join(map(str,result))
     
-    text = text + ' lost!'
+    text = text + ' が見つかりません!'
     api.line_notify(text)
     
     
@@ -149,12 +150,12 @@ def food_in():
         name  = request.form['username']
         aruco_id = request.form['number']
         if name == "0" or aruco_id == "0":
-            flash("please select aviable dropdown")
+            flash("有効な選択肢を選んでください")
             return render_template("foodin.html")
         datas = db_tool.search_aruco(UsingMarker,int(aruco_id))
         datas.user_name = name
         db_tool.update()
-        flash("registerd")
+        flash("登録されました")
         return redirect(url_for("foodlist"))
 
 @app.route('/food/out/auth', methods=['GET', 'POST'])
@@ -165,14 +166,14 @@ def food_out_auth():
     elif request.method == 'POST':
         username = request.form['username']
         if username == "0":
-            flash("please choose name")
+            flash("有効な選択肢を選んでください")
             return redirect(url_for("food_out_auth"))
         detect_flag ,names = cap(Camera(),username,0)
         if detect_flag==False or names!=username:
-            flash("auth faild")
+            flash("認証に失敗")
             return render_template("foodoutauth.html")
         sess["name"] = username
-        flash("auth successed")
+        flash("認証に成功")
         return redirect(url_for("food_out"))
     
 @app.route("/food/out",methods=['GET', 'POST'])
@@ -183,9 +184,12 @@ def food_out():
         return render_template("foodoutmenu.html",datas=datas)
     elif request.method == 'POST':
         aruco_id = request.form["mark"]
+        if aruco_id == "0":
+            flash("有効な選択肢を選んでください")
+            return redirect(url_for("food_out"))
         data = db_tool.search_aruco(UsingMarker,aruco_id)
         db_tool.delete(data)
-        flash("retrieved")
+        flash("取り出しました")
         return redirect(url_for("foodlist"))
     
 @app.route('/face/', methods=['GET', 'POST'])
@@ -270,11 +274,11 @@ def make_marker():
             
         pdf_path = pd.convert_to_pdf()
 
-        flash("created")
+        flash("作成されました")
         return send_file(pdf_path,as_attachment=True)
 
 
 # Main
 if __name__ == '__main__':
-    app.debug = True
+    app.debug = False
     app.run(host='0.0.0.0',port=5000)

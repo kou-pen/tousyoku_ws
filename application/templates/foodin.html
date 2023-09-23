@@ -4,7 +4,7 @@
 
 <form method='POST'>
     <div class="mb-3">
-        <label for="username"  class="form-label">Choose your name</label>
+        <label for="username"  class="form-label">あなたの名前を選択</label>
         <select class="form-select" aria-label="user name" name="username" id="username">
             <option value="0" selected >None</option>
             {% for data in userdatas %}
@@ -13,7 +13,7 @@
         </select>
     </div>
     <div class="mb-3">
-        <label for="number"  class="form-label">Choose marker you want to use</label>
+        <label for="number"  class="form-label">使用したいマーカーを選択</label>
         <select class="form-select" aria-label="user name" name="number" id="number">
             <option value="0" selected >None</option>
             {% for data in labeldatas %}
@@ -21,7 +21,7 @@
             {% endfor %}
         </select>
     </div>
-    <button type="submit" class="btn btn-primary">Use</button>
+    <button type="submit" class="btn btn-primary">確定</button>
 </form>
 
 {% endblock %}
