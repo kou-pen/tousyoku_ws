@@ -2,7 +2,7 @@ import requests
 import json
 
 def main():
-    URL = 'http://127.0.0.1:8000/'
+    URL = 'http://192.168.0.10:8000/status'
     res = requests.get(URL)
     print(res.json())
     

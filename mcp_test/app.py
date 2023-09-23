@@ -15,6 +15,7 @@ mcp.Setup(CE,SPEED)
 @app.get("/status")
 def index():
     data, volt = mcp.ReadData(CE,CH,VREF)
+    print(data)
     return {"status": data > 1000}
 
 if __name__ == '__main__':
