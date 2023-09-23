@@ -7,6 +7,9 @@ from pydantic import BaseModel
 
 class bool_data(BaseModel):
     status: bool
+    
+class th_data(BaseModel):
+    th: int
 
 CE = 0
 SPEED = 1000000 # Hz
@@ -24,11 +27,11 @@ wiringpi.wiringPiSetupGpio()
 
 wiringpi.pinMode(LED1,1)
 
-@app.get("/status")
-def index():
+@app.post("/status")
+def index(data: th_data):
     data, _ = mcp.ReadData(CE,CH,VREF)
     print(data)
-    return {"status": data > TH}
+    return {"status": data > int(data.th)}
 
 @app.post("/toggle")
 def toggle(data: bool_data):

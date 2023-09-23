@@ -8,8 +8,11 @@ class ApiLed():
         self.TOKEN = TOKEN
         
     
-    def get_now_status(self):
-        res = requests.get(self.GET_URL)
+    def get_now_status(self,th):
+        data = {
+            'th': th
+        }
+        res = requests.post(self.GET_URL,json.dumps(data))
         json_data = res.json()
         return json_data["status"]
     
