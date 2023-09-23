@@ -28,10 +28,10 @@ wiringpi.wiringPiSetupGpio()
 wiringpi.pinMode(LED1,1)
 
 @app.post("/status")
-def index(data: th_data):
+def index(dat: th_data):
     data, _ = mcp.ReadData(CE,CH,VREF)
     print(data)
-    return {"status": data > int(data.th)}
+    return {"status": data > int(dat.th)}
 
 @app.post("/toggle")
 def toggle(data: bool_data):

@@ -125,6 +125,7 @@ default = config['DEFAULT']
 GET_URL = 'http://192.168.0.10:8000/status'
 POST_URL = 'http://192.168.0.10:8000/toggle'
 LINE_TOKEN = 'Yi1UAVve4DbuaADyUld2W1cGuwMEBqLRqoRoDjD075q'
+th = 1000
         
 # Make Flask Ob
 app = Flask(__name__)
@@ -132,7 +133,7 @@ app.secret_key = default['Secret_key']
 
 # Make instance
 db_tool = DataBaseTools(Base)
-api = ApiLed(GET_URL,POST_URL,LINE_TOKEN)
+api = ApiLed(th,GET_URL,POST_URL,LINE_TOKEN)
 
 #Routing
 @app.route('/')

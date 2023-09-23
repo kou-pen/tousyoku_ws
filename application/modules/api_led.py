@@ -2,10 +2,11 @@ import requests
 import json
 
 class ApiLed():
-    def __init__(self,GET,POST,TOKEN=None):
+    def __init__(self,th,GET,POST,TOKEN=None):
         self.GET_URL = GET
         self.POST_URL = POST
         self.TOKEN = TOKEN
+        self.th = th
         
     
     def get_now_status(self,th):
@@ -32,7 +33,7 @@ class ApiLed():
         requests.post('https://notify-api.line.me/api/notify', headers=headers, files=files)
         
     def toggle_led(self):
-        self.post_led_status(self.get_now_status())
+        self.post_led_status(self.get_now_status(self.th))
 
 def main():
     GET_URL = 'http://192.168.0.10:8000/status'
